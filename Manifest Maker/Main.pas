@@ -1,0 +1,256 @@
+   {                                          }
+   {             Manifest Maker v1.0          }
+   {                Options                   }
+   {                                          }
+   {              Licence MIT                 }
+   {               by Greg Bayes,             }
+   {                                          }
+   {                                          }
+   {******************************************}
+unit Main;
+
+interface
+
+uses
+  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls,ActiveX,
+   ComObj,StrUtils,vcl.themes;
+
+type
+  Tfmmain = class(TForm)
+    btnextract: TButton;
+    Memo1: TMemo;
+    btnsave: TButton;
+    FileOpenDialog1: TFileOpenDialog;
+    Edit1: TEdit;
+    FileSaveDialog1: TFileSaveDialog;
+    Memo2: TMemo;
+    Copy: TButton;
+    Button1: TButton;
+    Label1: TLabel;
+    btnoptions: TButton;
+    btnclose: TButton;
+    btnopen: TButton;
+    btnexist: TButton;
+    Button2: TButton;
+    Button3: TButton;
+    procedure btnextractClick(Sender: TObject);
+    procedure btnsaveClick(Sender: TObject);
+    procedure CopyClick(Sender: TObject);
+    procedure Button1Click(Sender: TObject);
+    procedure FormShow(Sender: TObject);
+    procedure btnoptionsClick(Sender: TObject);
+    procedure btncloseClick(Sender: TObject);
+    procedure btnopenClick(Sender: TObject);
+    procedure btnexistClick(Sender: TObject);
+    procedure Button2Click(Sender: TObject);
+    procedure Button3Click(Sender: TObject);
+  protected
+   procedure WMDpiChanged(var Message: TMessage);
+    { Private declarations }
+  public
+    { Public declarations }
+  end;
+function  GetManifest(const FileName:string) : AnsiString;
+var
+  fmmain: Tfmmain;
+
+implementation
+uses Options,registrytest;
+
+{$R *.dfm}
+
+{-$DEFINE DELPHI_STYLE_SCALING}
+procedure Tfmmain.WMDpiChanged(var Message: TMessage);
+
+  {$IFDEF DELPHI_STYLE_SCALING}
+  function FontHeightAtDpi(aDPI, aFontSize: integer): integer;
+  var
+    tmpCanvas: TCanvas;
+  begin
+    tmpCanvas := TCanvas.Create;
+    try
+      tmpCanvas.Handle := GetDC(0);
+      tmpCanvas.Font.Assign(self.Font);
+      tmpCanvas.Font.PixelsPerInch := aDPI; //must be set BEFORE size
+      tmpCanvas.Font.size := aFontSize;
+      result := tmpCanvas.TextHeight('0');
+    finally
+      tmpCanvas.free;
+    end;
+  end;
+  {$ENDIF}
+
+begin
+  inherited;
+  {$IFDEF DELPHI_STYLE_SCALING}
+  ChangeScale(FontHeightAtDpi(LOWORD(Message.wParam), self.Font.Size), FontHeightAtDpi(self.PixelsPerInch, self.Font.Size));
+  {$ELSE}
+  ChangeScale(LOWORD(Message.wParam), self.PixelsPerInch);
+  {$ENDIF}
+  self.PixelsPerInch := LOWORD(Message.wParam);
+  end;
+
+ function  GetManifest(const FileName:string) : AnsiString;
+var
+  hModule  : THandle;
+  Resource : TResourceStream;
+begin
+  Result:='';
+  //load the file to read
+  hModule:=LoadLibraryEx(PChar(FileName),0,LOAD_LIBRARY_AS_DATAFILE);
+  try
+     if hModule=0 then RaiseLastOSError;
+     //check if exist the manifest inside of the file
+     if FindResource(hModule, MakeIntResource(1), RT_MANIFEST)<>0 then
+     begin
+       //load the resource
+       Resource:=TResourceStream.CreateFromID(hModule,1,RT_MANIFEST);
+       try
+         SetString(Result, PAnsiChar(Resource.Memory),Resource.Size);
+       finally
+         Resource.Free;
+       end;
+     end;
+  finally
+      FreeLibrary(hModule);
+  end;
+end;
+
+procedure Tfmmain.btncloseClick(Sender: TObject);
+begin
+  fmMain.Close;
+end;
+
+procedure Tfmmain.btnextractClick(Sender: TObject);
+begin
+
+   if fileopendialog1.execute then
+   edit1.Clear;
+   memo1.Clear;
+   memo1.Text:= GetManifest(fileopendialog1.filename) ;
+   edit1.Text:=(fileopendialog1.FileName);
+end;
+
+procedure Tfmmain.btnopenClick(Sender: TObject);
+begin
+ if fileopendialog1.execute then
+  memo1.Lines.LoadFromFile(FileOpenDialog1.filename);
+end;
+
+procedure Tfmmain.btnoptionsClick(Sender: TObject);
+begin
+   fmoptions.Show;
+end;
+
+procedure Tfmmain.btnsaveClick(Sender: TObject);
+begin
+  if filesavedialog1.execute then
+
+  memo1.lines.SaveToFile(filesavedialog1.filename);
+end;
+
+procedure Tfmmain.Button1Click(Sender: TObject);
+begin
+  if filesavedialog1.execute then
+  memo2.lines.SaveToFile(filesavedialog1.filename);
+end;
+
+procedure Tfmmain.Button2Click(Sender: TObject);
+begin
+memo2.Clear;
+ memo2.Text:=
+' <?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + #13#10+
+'<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"> ' + #13#10+
+'    <dependency>'  + #13#10+
+'    <dependentAssembly> ' + #13#10+
+'      <assemblyIdentity  '  + #13#10+
+'        type="win32" '  + #13#10+
+'        name="Microsoft.Windows.Common-Controls" '   + #13#10+
+'        version="6.0.0.0"'   + #13#10+
+'        publicKeyToken="6595b64144ccf1df" '    + #13#10+
+'        language="*"  '  + #13#10+
+'        processorArchitecture="*"/>    '   + #13#10+
+'    </dependentAssembly>   '  + #13#10+
+'  </dependency> '       + #13#10+
+'  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">  '    + #13#10+
+'    <security> '+
+'      <requestedPrivileges>'    + #13#10+
+'        <requestedExecutionLevel '   + #13#10+
+'          level="asInvoker"'    + #13#10+
+'          uiAccess="false"/> '    + #13#10+
+'        </requestedPrivileges> '    + #13#10+
+'    </security>'    + #13#10+
+'  </trustInfo> ' + #13#10+
+'    <compatibility xmlns="urn:schemas-microsoft-com:compatibility.v1"> ' + #13#10+
+'        <application>   ' + #13#10+
+'            <!-- Windows 10 -->   ' + #13#10+
+'            <supportedOS Id="{8e0f7a12-bfb3-4fe8-b9a5-48fd50a15a9a}"/> ' + #13#10+
+'            <!-- Windows 8.1 --> ' + #13#10+
+'            <supportedOS Id="{1f676c76-80e1-4239-95bb-83d0f6d0da78}"/> ' + #13#10+
+'            <!-- Windows Vista --> ' + #13#10+
+'            <supportedOS Id="{e2011457-1546-43c5-a5fe-008deee3d3f0}"/>  ' + #13#10+
+'            <!-- Windows 7 --> ' + #13#10+
+'            <supportedOS Id="{35138b9a-5d96-4fbd-8e2d-a2440225f93a}"/> ' + #13#10+
+'            <!-- Windows 8 -->  ' + #13#10+
+'            <supportedOS Id="{4a2f28e3-53b9-4441-ba9c-d69d4a4a6e38}"/> ' + #13#10+
+'        </application> ' + #13#10+
+'    </compatibility>     ' + #13#10+
+'<asmv3:application xmlns:asmv3="urn:schemas-microsoft-com:asm.v3">   ' + #13#10+
+'   <asmv3:windowsSettings   ' + #13#10+
+'        xmlns="http://schemas.microsoft.com/SMI/2005/WindowsSettings">  ' + #13#10+
+'     <dpiAware>True/PM</dpiAware>  ' + #13#10+
+'   </asmv3:windowsSettings>    ' + #13#10+
+'</asmv3:application> ' + #13#10+
+'</assembly>';
+end;
+
+procedure Tfmmain.Button3Click(Sender: TObject);
+begin
+  fmregistrytest.show;
+end;
+
+procedure Tfmmain.btnexistClick(Sender: TObject);
+begin
+ memo1.Clear;
+ memo1.Text:=
+' <?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + #13#10+
+'<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0"> ' + #13#10+
+'    <dependency>'  + #13#10+
+'    <dependentAssembly> ' + #13#10+
+'      <assemblyIdentity  '  + #13#10+
+'        type="win32" '  + #13#10+
+'        name="Microsoft.Windows.Common-Controls" '   + #13#10+
+'        version="6.0.0.0"'   + #13#10+
+'        publicKeyToken="6595b64144ccf1df" '    + #13#10+
+'        language="*"  '  + #13#10+
+'        processorArchitecture="*"/>    '   + #13#10+
+'    </dependentAssembly>   '  + #13#10+
+'  </dependency> '       + #13#10+
+'  <trustInfo xmlns="urn:schemas-microsoft-com:asm.v3">  '    + #13#10+
+'    <security> '+
+'      <requestedPrivileges>'    + #13#10+
+'        <requestedExecutionLevel '   + #13#10+
+'          level="asInvoker"'    + #13#10+
+'          uiAccess="false"/> '    + #13#10+
+'        </requestedPrivileges> '    + #13#10+
+'    </security>'    + #13#10+
+'  </trustInfo> ' + #13#10+
+'</assembly>';
+
+end;
+
+procedure Tfmmain.CopyClick(Sender: TObject);
+begin
+  memo2.Clear;
+  memo2.Text:=memo1.Text;
+end;
+
+procedure Tfmmain.FormShow(Sender: TObject);
+begin
+    edit1.Text:='';
+    memo1.clear;
+    memo2.Clear;
+end;
+
+end.

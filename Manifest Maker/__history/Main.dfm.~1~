@@ -1,0 +1,239 @@
+object fmmain: Tfmmain
+  Left = 0
+  Top = 0
+  Caption = '    Manifest Maker   -    Chromelink Solutions (c)'
+  ClientHeight = 627
+  ClientWidth = 1099
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -13
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  OldCreateOrder = False
+  PixelsPerInch = 120
+  TextHeight = 16
+  object Label1: TLabel
+    Left = 363
+    Top = 1
+    Width = 363
+    Height = 24
+    Caption = 'Windows Manifest Extractor and Modifier'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -20
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+  end
+  object btnextract: TButton
+    Left = 176
+    Top = 0
+    Width = 138
+    Height = 25
+    Caption = 'Extract Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 0
+    OnClick = btnextractClick
+  end
+  object Button3: TButton
+    Left = 765
+    Top = 0
+    Width = 155
+    Height = 25
+    Caption = 'Registry Access Test'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 1
+    OnClick = Button3Click
+  end
+  object Button2: TButton
+    Left = 596
+    Top = 61
+    Width = 195
+    Height = 25
+    Caption = 'Load a Full Custom Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 2
+    OnClick = Button2Click
+  end
+  object btnexist: TButton
+    Left = 176
+    Top = 61
+    Width = 138
+    Height = 25
+    Caption = 'Load Base Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 3
+    OnClick = btnexistClick
+  end
+  object btnopen: TButton
+    Left = 41
+    Top = 61
+    Width = 129
+    Height = 25
+    Caption = 'Load a Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 4
+    OnClick = btnopenClick
+  end
+  object btnclose: TButton
+    Left = 971
+    Top = 0
+    Width = 75
+    Height = 25
+    Caption = 'Close'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 5
+    OnClick = btncloseClick
+  end
+  object btnoptions: TButton
+    Left = 797
+    Top = 61
+    Width = 99
+    Height = 25
+    Caption = 'Simple Help'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 6
+    OnClick = btnoptionsClick
+  end
+  object Button1: TButton
+    Left = 902
+    Top = 61
+    Width = 144
+    Height = 25
+    Caption = 'Save to Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 7
+    OnClick = Button1Click
+  end
+  object Copy: TButton
+    Left = 501
+    Top = 61
+    Width = 75
+    Height = 25
+    Caption = 'Copy >>'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 8
+    OnClick = CopyClick
+  end
+  object Memo2: TMemo
+    Left = 550
+    Top = 92
+    Width = 545
+    Height = 533
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Lines.Strings = (
+      '')
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 9
+  end
+  object Edit1: TEdit
+    Left = 8
+    Top = 31
+    Width = 560
+    Height = 24
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 10
+  end
+  object btnsave: TButton
+    Left = 319
+    Top = 61
+    Width = 136
+    Height = 25
+    Caption = 'Save to Manifest'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    TabOrder = 11
+    OnClick = btnsaveClick
+  end
+  object Memo1: TMemo
+    Left = 8
+    Top = 92
+    Width = 545
+    Height = 541
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clWindowText
+    Font.Height = -15
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    Lines.Strings = (
+      '')
+    ParentFont = False
+    ScrollBars = ssBoth
+    TabOrder = 12
+  end
+  object FileSaveDialog1: TFileSaveDialog
+    FavoriteLinks = <>
+    FileTypes = <
+      item
+        DisplayName = '.Manifest'
+      end>
+    Options = []
+    Left = 608
+  end
+  object FileOpenDialog1: TFileOpenDialog
+    FavoriteLinks = <>
+    FileTypes = <>
+    Options = []
+    Left = 696
+  end
+end
