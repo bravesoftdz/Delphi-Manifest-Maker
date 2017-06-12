@@ -28,7 +28,7 @@ Opening the Custom Manifest includes full support for Windows 10 and is
 backwards compatible.
 
 Refer to
-[MICROSOFT](../../../../../../GregB/AppData/Roaming/Microsoft/Word/msdn.microsoft.com/en-us/library/WINDOWS/DESKTOP/DN48124(V=VS.85).ASPX)
+[MICROSOFT](msdn.microsoft.com/en-us/library/WINDOWS/DESKTOP/DN48124(V=VS.85).ASPX)
 for more information on more information about the manifest requirements or
 checkout the embarcadero docwiki for more info.
 
